@@ -1,11 +1,9 @@
 from tests import client
 
-
 def test_get_all_books():
     response = client.get("/books/")
     assert response.status_code == 200
     assert len(response.json()) == 3
-
 
 def test_get_single_book():
     response = client.get("/books/1")
@@ -13,7 +11,6 @@ def test_get_single_book():
     data = response.json()
     assert data["title"] == "The Hobbit"
     assert data["author"] == "J.R.R. Tolkien"
-
 
 def test_create_book():
     new_book = {
@@ -29,7 +26,6 @@ def test_create_book():
     assert data["id"] == 4
     assert data["title"] == "Harry Potter and the Sorcerer's Stone"
 
-
 def test_update_book():
     updated_book = {
         "id": 1,
@@ -43,20 +39,19 @@ def test_update_book():
     data = response.json()
     assert data["title"] == "The Hobbit: An Unexpected Journey"
 
-
 def test_delete_book():
     response = client.delete("/books/3")
     assert response.status_code == 204
-
+    
     response = client.get("/books/3")
     assert response.status_code == 404
-    
+
 def test_get_book_success():
-    response = client.get("/api/v1/books/1")
+    response = client.get("/books/1")  # Changed from /api/v1/books to /books
     assert response.status_code == 200
-    assert response.json()["title"] == "The Great Gatsby"
+    assert response.json()["title"] == "The Hobbit"  # Changed expected title
 
 def test_get_book_not_found():
-    response = client.get("/api/v1/books/999")
+    response = client.get("/books/999")  # Changed from /api/v1/books to /books
     assert response.status_code == 404
     assert response.json()["detail"] == "Book not found"

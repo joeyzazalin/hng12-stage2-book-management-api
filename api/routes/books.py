@@ -50,9 +50,9 @@ async def get_books() -> OrderedDict[int, Book]:
 
 @router.get("/{book_id}", response_model=Book)
 async def get_book(book_id: int):
-    if book_id not in books_db:
+    if book_id not in db.books:  # Changed from books_db to db.books
         raise HTTPException(status_code=404, detail="Book not found")
-    return books_db[book_id]
+    return db.books[book_id]  # Changed from books_db to db.books
 
 
 @router.put("/{book_id}", response_model=Book, status_code=status.HTTP_200_OK)
