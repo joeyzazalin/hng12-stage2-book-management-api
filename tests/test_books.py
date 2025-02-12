@@ -1,4 +1,33 @@
 from tests import client
+import pytest
+
+@pytest.fixture(autouse=True)
+def reset_db():
+    # Reset the database before each test
+    from api.routes.books import db
+    db.books = {
+        1: Book(
+            id=1,
+            title="The Hobbit",
+            author="J.R.R. Tolkien",
+            publication_year=1937,
+            genre=Genre.SCI_FI,
+        ),
+        2: Book(
+            id=2,
+            title="The Lord of the Rings",
+            author="J.R.R. Tolkien",
+            publication_year=1954,
+            genre=Genre.FANTASY,
+        ),
+        3: Book(
+            id=3,
+            title="The Return of the King",
+            author="J.R.R. Tolkien",
+            publication_year=1955,
+            genre=Genre.FANTASY,
+        ),
+    }
 
 def test_get_all_books():
     response = client.get("/books/")
@@ -47,11 +76,11 @@ def test_delete_book():
     assert response.status_code == 404
 
 def test_get_book_success():
-    response = client.get("/books/1")  # Changed from /api/v1/books to /books
+    response = client.get("/books/1")
     assert response.status_code == 200
-    assert response.json()["title"] == "The Hobbit"  # Changed expected title
+    assert response.json()["title"] == "The Hobbit"
 
 def test_get_book_not_found():
-    response = client.get("/books/999")  # Changed from /api/v1/books to /books
+    response = client.get("/books/999")
     assert response.status_code == 404
     assert response.json()["detail"] == "Book not found"
